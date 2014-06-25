@@ -94,13 +94,56 @@ for var index = 0; index < result.count; ++index {
 
 For some reason a `for-in` loop doesn't work.
 
-```js
+```swift
 for row in result {
   println(row.value)
 }
 ```
 
 Xcode starts to freak out and throws errors.
+
+#### Query by timestamp
+
+Add document with timestamp.
+
+```swift
+var timestamp = NSDate().timeIntervalSince1970 * 1000 as Double
+
+var person: Dictionary<String, String> = [
+    "timestamp": timestamp,
+    "type": "person",
+    "name": "mirco"
+]
+```
+
+Now query the view and get all persons in the order they were added to db.
+
+```swift
+var db = getDatabase("people")
+var view = db.viewNamed("persons")
+var map: CBLMapBlock = { (doc: NSDictionary!, emit: CBLMapEmitBlock!) in
+    if doc["type"] {
+        if doc["type"] as NSString == "person" {
+            emit(doc["timestamp"] as Double, doc)
+        }
+    }
+}
+view.setMapBlock(map, version: "1")
+
+// get all moves between date in the future
+// 2999-12-31 = 32503593600000
+// and date in the past
+// 2013-01-01 = 1356998400000
+
+var query = db.viewNamed("persons").createQuery()
+query.startKey = 1356998400000 as Double
+query.endKey = 32503593600000 as Double
+var error: NSError?
+var data = query.run(&error)
+if error {
+    println(error)
+}
+```
 
 ## License
 
