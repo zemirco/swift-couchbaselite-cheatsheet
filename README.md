@@ -145,6 +145,23 @@ if error {
 }
 ```
 
+#### Updating a document
+
+```swift
+var db = getDatabase("people")
+var personDocument = db.documentWithID(personId)
+
+var error: NSError?
+personDocument.update({ (newRev: CBLUnsavedRevision!) in
+    newRev["name"] = "john"
+    return true
+}, error: &error)
+
+if error {
+    println(error)
+}
+```
+
 ## License
 
 MIT
