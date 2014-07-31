@@ -88,7 +88,7 @@ if error {
 }
 
 for var index = 0; index < result.count; ++index {
-  println(result.rowAtIndex(index).value)
+  println(result.rowAtIndex(index).document)
 }
 ```
 
@@ -124,7 +124,7 @@ var view = db.viewNamed("persons")
 var map: CBLMapBlock = { (doc: NSDictionary!, emit: CBLMapEmitBlock!) in
     if doc["type"] {
         if doc["type"] as NSString == "person" {
-            emit(doc["timestamp"] as Double, doc)
+            emit(doc["timestamp"] as Double, nil)
         }
     }
 }
