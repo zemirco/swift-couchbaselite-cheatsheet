@@ -43,7 +43,7 @@ var manager = CBLManager.sharedInstance()
 
 ```swift
 var error: NSError?
-var db = manager.databaseNamed("myDB", error: &error)
+var db = manager.databaseNamed("mydb", error: &error)
 if error {
   println(error)
 }
@@ -54,7 +54,7 @@ if error {
 ```swift
 var properties = [
   "name": "mirco",
-  "email": "mirco.zeiss@gmail.com"
+  "email": "mirco.zeiss@gmail.com",
   "repo": "swift-couchbaselite-cheatsheet"
 ]
 var doc = db.createDocument()
