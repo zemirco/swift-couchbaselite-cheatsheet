@@ -11,7 +11,7 @@ class MainViewController: UIViewController {
         
         var error: NSError?
         var db = manager.databaseNamed("mydb", error: &error)
-        if error {
+        if (error != nil) {
             println(error)
         }
         
@@ -24,7 +24,7 @@ class MainViewController: UIViewController {
         
         var doc = db.createDocument()
         doc.putProperties(properties, error: &error)
-        if error {
+        if (error != nil) {
             println(error)
         }
         
@@ -33,7 +33,7 @@ class MainViewController: UIViewController {
         var block: CBLMapBlock = { (doc: [NSObject: AnyObject]!, emit: CBLMapEmitBlock!) in
             println(doc)
             emit(doc["name"], nil)
-            if doc["name"] {
+            if (doc["name"] != nil) {
                 if doc["name"] as NSString == "name" {
                     emit([doc["repo"] as NSString, doc["name"] as NSString], nil)
                 }
@@ -46,7 +46,7 @@ class MainViewController: UIViewController {
         var query = db.viewNamed("name").createQuery()
         query.keys = ["mirco"]
         var result = query.run(&error)
-        if error {
+        if (error != nil) {
             println(error)
         }
         
