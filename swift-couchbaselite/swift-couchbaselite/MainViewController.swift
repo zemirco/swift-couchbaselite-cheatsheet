@@ -31,8 +31,6 @@ class MainViewController: UIViewController {
         // Creating and initializing views
         var view = db.viewNamed("name")
         var block: CBLMapBlock = { (doc: [NSObject: AnyObject]!, emit: CBLMapEmitBlock!) in
-            println(doc)
-            emit(doc["name"], nil)
             if (doc["name"] != nil) {
                 if doc["name"] as NSString == "name" {
                     emit([doc["repo"] as NSString, doc["name"] as NSString], nil)

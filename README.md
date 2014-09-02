@@ -44,7 +44,7 @@ var manager = CBLManager.sharedInstance()
 ```swift
 var error: NSError?
 var db = manager.databaseNamed("mydb", error: &error)
-if error {
+if (error != nil) {
   println(error)
 }
 ```
@@ -60,7 +60,7 @@ var properties = [
 var doc = db.createDocument()
 var error: NSError?
 doc.putProperties(properties, error: &error)
-if error {
+if (error != nil) {
   println(error)
 }
 ```
@@ -69,7 +69,7 @@ if error {
 
 ```swift
 var view = db.viewNamed("name")
-var block: CBLMapBlock = { (doc: NSDictionary!, emit: CBLMapEmitBlock!) in
+var block: CBLMapBlock = { (doc: [NSObject: AnyObject]!, emit: CBLMapEmitBlock!) in
   emit(doc["name"], nil)
 }
 
@@ -83,12 +83,14 @@ var query = db.viewNamed("name").createQuery()
 query.keys = ["mirco"]
 var error: NSError?
 var result = query.run(&error)
-if error {
+if (error != nil) {
   println(error)
 }
 
-for var index = 0; index < result.count; ++index {
-  println(result.rowAtIndex(index).document)
+var count = Int(result.count)
+
+for var index = 0; index < count; ++index {
+    println(result.rowAtIndex(UInt(index)).document)
 }
 ```
 
