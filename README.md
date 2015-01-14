@@ -164,6 +164,19 @@ if error {
 }
 ```
 
+#### Replication
+
+```swift
+var url = NSURL(string: "http://127.0.0.1:5984/test")
+var push = db.createPushReplication(url)
+var pull = db.createPullReplication(url)
+push.continuous = true
+pull.continuous = true
+
+push.start()
+pull.start()
+```
+
 ## License
 
 MIT
