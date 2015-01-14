@@ -30,15 +30,11 @@ class MainViewController: UIViewController {
         
         // Creating and initializing views
         var view = db.viewNamed("name")
-        var block: CBLMapBlock = { (doc: [NSObject: AnyObject]!, emit: CBLMapEmitBlock!) in
-            if (doc["name"] != nil) {
-                if doc["name"] as NSString == "name" {
-                    emit([doc["repo"] as NSString, doc["name"] as NSString], nil)
-                }
-            }
+        var block: CBLMapBlock = { (doc, emit) in
+            emit(doc["name"] as NSString, nil)
         }
         
-        view.setMapBlock(block, version: "4")
+        view.setMapBlock(block, version: "11")
         
         // Querying views
         var query = db.viewNamed("name").createQuery()

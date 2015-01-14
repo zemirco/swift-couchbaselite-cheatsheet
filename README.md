@@ -69,7 +69,7 @@ if (error != nil) {
 
 ```swift
 var view = db.viewNamed("name")
-var block: CBLMapBlock = { (doc: [NSObject: AnyObject]!, emit: CBLMapEmitBlock!) in
+var block: CBLMapBlock = { (doc, emit) in
   emit(doc["name"], nil)
 }
 
@@ -123,7 +123,7 @@ Now query the view and get all persons in the order they were added to db.
 ```swift
 var db = getDatabase("people")
 var view = db.viewNamed("persons")
-var map: CBLMapBlock = { (doc: NSDictionary!, emit: CBLMapEmitBlock!) in
+var map: CBLMapBlock = { (doc, emit) in
     if doc["type"] {
         if doc["type"] as NSString == "person" {
             emit(doc["timestamp"] as Double, nil)
