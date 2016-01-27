@@ -23,34 +23,35 @@ var manager = CBLManager.sharedInstance()
 #### Opening a database
 
 ```swift
-var error: NSError?
-var db = manager.databaseNamed("mydb", error: &error)
-if (error != nil) {
-  println(error)
+do {
+	let db = try manager.databaseNamed("mydb")
+} catch {
+	print(error)
 }
 ```
 
 #### Creating documents
 
 ```swift
-var properties = [
-  "name": "mirco",
-  "email": "mirco.zeiss@gmail.com",
-  "repo": "swift-couchbaselite-cheatsheet"
-]
-var doc = db.createDocument()
-var error: NSError?
-doc.putProperties(properties, error: &error)
-if (error != nil) {
-  println(error)
+do {
+	let properties = [
+		"name": "mirco",
+		"email": "mirco.zeiss@gmail.com",
+		"repo": "swift-couchbaselite-cheatsheet"
+	]
+
+	let doc = db.createDocument()
+	try doc.putProperties(properties)
+} catch {
+	print(error)
 }
 ```
 
 #### Creating and initializing views
 
 ```swift
-var view = db.viewNamed("name")
-var block: CBLMapBlock = { (doc, emit) in
+let view = db.viewNamed("name")
+let block: CBLMapBlock = { (doc, emit) in
   emit(doc["name"], nil)
 }
 
@@ -60,18 +61,18 @@ view.setMapBlock(block, version: "1")
 #### Querying views
 
 ```swift
-var query = db.viewNamed("name").createQuery()
-query.keys = ["mirco"]
-var error: NSError?
-var result = query.run(&error)
-if (error != nil) {
-  println(error)
-}
+do {
+	let query = db.viewNamed("name").createQuery()
+	query.keys = ["mirco"]
+	let result = try query.run()
 
-var count = Int(result.count)
+	let count = Int(result.count)
 
-for var index = 0; index < count; ++index {
-    println(result.rowAtIndex(UInt(index)).document)
+	for var index = 0; index < count; ++index {
+		print(result.rowAtIndex(UInt(index)).document)
+	}
+} catch {
+	print(error)
 }
 ```
 
@@ -90,9 +91,9 @@ Xcode starts to freak out and throws errors.
 Add document with timestamp.
 
 ```swift
-var timestamp = NSDate().timeIntervalSince1970 * 1000 as Double
+let timestamp = NSDate().timeIntervalSince1970 * 1000 as Double
 
-var person: Dictionary<String, String> = [
+let person: Dictionary[String, String]> = [
     "timestamp": timestamp,
     "type": "person",
     "name": "mirco"
@@ -102,9 +103,9 @@ var person: Dictionary<String, String> = [
 Now query the view and get all persons in the order they were added to db.
 
 ```swift
-var db = getDatabase("people")
-var view = db.viewNamed("persons")
-var map: CBLMapBlock = { (doc, emit) in
+let db = getDatabase("people")
+let view = db.viewNamed("persons")
+let map: CBLMapBlock = { (doc, emit) in
     if doc["type"] {
         if doc["type"] as NSString == "person" {
             emit(doc["timestamp"] as Double, nil)
@@ -118,13 +119,13 @@ view.setMapBlock(map, version: "1")
 // and date in the past
 // 2013-01-01 = 1356998400000
 
-var query = db.viewNamed("persons").createQuery()
-query.startKey = 1356998400000 as Double
-query.endKey = 32503593600000 as Double
-var error: NSError?
-var data = query.run(&error)
-if error {
-    println(error)
+do {
+	let query = db.viewNamed("persons").createQuery()
+	query.startKey = 1356998400000 as Double
+	query.endKey = 32503593600000 as Double
+	let data = try query.run()
+} catch {
+	print(error)
 }
 ```
 
@@ -134,15 +135,15 @@ if error {
 var db = getDatabase("people")
 var personDocument = db.documentWithID(personId)
 
-var error: NSError?
-personDocument.update({ (newRev: CBLUnsavedRevision!) in
-    newRev["name"] = "john"
-    return true
-}, error: &error)
-
-if error {
-    println(error)
+do {
+	try personDocument.update({ (newRev: CBLUnsavedRevision!) in
+	    newRev["name"] = "john"
+	    return true
+	})
+} catch {
+	print(error)
 }
+
 ```
 
 #### Replication
